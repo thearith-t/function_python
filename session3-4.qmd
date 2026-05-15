@@ -1,0 +1,935 @@
+---
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    transition: fade
+    font-family: 'Trebuchet MS'
+    scrollable: true
+---
+
+<style>
+body { font-family: 'Trebuchet MS', sans-serif; }
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 { color: #2980b9; }
+.reveal { font-family: 'Trebuchet MS', sans-serif; }
+
+/* QCM Styles */
+.qcm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 24px;
+}
+.qcm-option {
+  background: #f0f4f8;
+  border: 2px solid #bdc3c7;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  font-family: 'Trebuchet MS', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.qcm-option:hover { border-color: #2980b9; background: #ebf5fb; }
+.qcm-option.correct {
+  background: #d5f5e3;
+  border-color: #27ae60;
+  color: #1e8449;
+  font-weight: 700;
+}
+.qcm-option.wrong {
+  background: #fde8e8;
+  border-color: #e74c3c;
+  color: #c0392b;
+}
+.qcm-option .badge {
+  font-size: 1.2em;
+  min-width: 24px;
+}
+.qcm-label {
+  font-weight: 700;
+  color: #2980b9;
+  margin-right: 4px;
+}
+.qcm-question {
+  font-size: 1.25em;
+  font-weight: 600;
+  color: #2c3e50;
+  background: #eaf2fb;
+  border-left: 5px solid #2980b9;
+  padding: 14px 18px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+.q-number {
+  font-size: 0.85em;
+  color: #7f8c8d;
+  margin-bottom: 6px;
+}
+.reveal pre { font-size: 0.72em; }
+</style>
+
+<script>
+function qcm(optionEl, isCorrect) {
+  const grid = optionEl.closest('.qcm-grid');
+  if (grid.dataset.answered) return;
+  grid.dataset.answered = "true";
+  const opts = grid.querySelectorAll('.qcm-option');
+  opts.forEach(o => {
+    o.style.cursor = 'default';
+    if (o === optionEl) {
+      o.classList.add(isCorrect ? 'correct' : 'wrong');
+      o.querySelector('.badge').textContent = isCorrect ? '✅' : '❌';
+    } else if (o.dataset.correct === "true") {
+      o.classList.add('correct');
+      o.querySelector('.badge').textContent = '✅';
+    }
+  });
+}
+</script>
+
+<div style="text-align:center; margin-top: 40px; line-height: 1.4;">
+  <h1 style="font-size: 2.5em; font-weight: 700; color: #2980b9; margin-bottom: 10px;">
+    Programming Language II
+  </h1>
+  <h2 style="font-size: 1.6em; font-weight: 500; color: #555;">
+    Functions in Python
+  </h2>
+  <div style="border-bottom: 4px solid #e74c3c; width: 45%; margin: 18px auto;"></div>
+  <h3 style="margin-top: 25px; font-weight: 700; color: #050E3C">
+    By: MIN Sothearith
+  </h3>
+  <h4 style="font-weight: 700; color: #666;">
+    Phnom Penh International University
+  </h4>
+</div>
+
+## Today's Session
+
+**Two Parts — ~3 Hours:**
+
+::: {.callout-note}
+## 📚 Part 1 — Theory (Slides 1–35)
+What is a Function · Why Functions Matter · Syntax · Types of Functions · Parameters & Arguments · Return Values · Scope · Lambda · Built-in Functions
+:::
+
+::: {.callout-tip}
+## 🎯 Part 2 — Quiz (35 Questions)
+Multiple-choice questions on functions. Click an answer — see instant feedback!
+:::
+
+---
+
+# PART 1: Functions
+
+---
+
+# Chapter 1: What is a Function?
+
+## 1.1 — The Concept of a Function
+
+A **function** is a named, reusable block of code that performs a specific task.
+
+Think of it like a **recipe**: you write it once, then use it as many times as you need.
+
+```python
+# Without a function — repeated code:
+print("Hello, Alice!")
+print("Hello, Bob!")
+print("Hello, Charlie!")
+
+# With a function — one definition, many uses:
+def greet(name):
+    print(f"Hello, {name}!")
+
+greet("Alice")
+greet("Bob")
+greet("Charlie")
+```
+
+::: {.callout-note}
+The `def` keyword tells Python you are **defining** a new function.
+:::
+
+## 1.2 — Why Do We Need Functions?
+
+| Problem without functions | How functions fix it |
+|--------------------------|---------------------|
+| Same code repeated many times | Write once, call many times |
+| Hard to find and fix bugs | Fix in one place, fixed everywhere |
+| Long, unreadable files | Break into small, named pieces |
+| Hard to test code | Test each function in isolation |
+
+::: {.callout-tip}
+## The DRY Principle
+**Don't Repeat Yourself** — if you write the same logic twice, it belongs in a function.
+:::
+
+```python
+# Without function — if tax rate changes, must update 3 places:
+price1 = 100 * 1.10
+price2 = 250 * 1.10
+price3 = 75  * 1.10
+
+# With function — update tax rate in ONE place:
+def apply_tax(price, rate=0.10):
+    return price * (1 + rate)
+```
+
+## 1.3 — Anatomy of a Function
+
+```python
+def function_name(parameter1, parameter2):
+    """Optional: docstring describing what this function does."""
+    # function body — indented code
+    result = parameter1 + parameter2
+    return result
+```
+
+| Part | Meaning |
+|------|---------|
+| `def` | Keyword that starts a function definition |
+| `function_name` | The name you choose — use `snake_case` |
+| `(parameter1, ...)` | Inputs the function accepts |
+| `:` | Ends the definition line |
+| Indented body | The code that runs when called |
+| `return` | Sends a value back to the caller |
+
+## 1.4 — Calling a Function
+
+**Defining** a function does not run it. You must **call** it:
+
+```python
+# Define
+def say_hello():
+    print("Hello!")
+
+# This line does nothing yet — no output
+# say_hello is just defined in memory
+
+# Call — this runs the body:
+say_hello()   # Hello!
+say_hello()   # Hello!
+say_hello()   # Hello!
+```
+
+::: {.callout-important}
+A function must be **defined before it is called** (Python reads top-to-bottom).
+:::
+
+---
+
+# Chapter 2: Types of Functions
+
+## 2.1 — No Parameters, No Return
+
+The simplest type: does something, returns nothing.
+
+```python
+def print_separator():
+    print("=" * 40)
+
+def show_welcome():
+    print_separator()
+    print("   Welcome to Programming II!")
+    print_separator()
+
+show_welcome()
+# ========================================
+#    Welcome to Programming II!
+# ========================================
+```
+
+::: {.callout-note}
+These functions are useful for **display** and **side effects** (printing, writing files).
+:::
+
+## 2.2 — With Parameters, No Return
+
+Accepts input but does not send a value back:
+
+```python
+def greet(name, language="English"):
+    if language == "Khmer":
+        print(f"សួស្ដី, {name}!")
+    else:
+        print(f"Hello, {name}!")
+
+greet("Sothearith")             # Hello, Sothearith!
+greet("Dara", language="Khmer") # សួស្ដី, Dara!
+```
+
+```python
+def print_score(student, score):
+    grade = "A" if score >= 90 else "B" if score >= 80 else "C"
+    print(f"{student}: {score}/100 → Grade {grade}")
+
+print_score("Alice", 95)   # Alice: 95/100 → Grade A
+print_score("Bob", 78)     # Bob: 78/100 → Grade C
+```
+
+## 2.3 — With Parameters, With Return
+
+The most powerful type: takes input, **computes** something, and **returns** a result.
+
+```python
+def add(a, b):
+    return a + b
+
+def square(n):
+    return n ** 2
+
+def celsius_to_fahrenheit(c):
+    return c * 9/5 + 32
+
+result = add(3, 4)               # 7
+print(square(5))                 # 25
+print(celsius_to_fahrenheit(0))  # 32.0
+print(celsius_to_fahrenheit(100))# 212.0
+```
+
+::: {.callout-tip}
+The returned value can be stored in a variable, printed, or passed to another function.
+:::
+
+## 2.4 — Default Parameters
+
+Give parameters a **default value** — callers can override or skip them:
+
+```python
+def power(base, exponent=2):
+    return base ** exponent
+
+print(power(3))       # 9   — exponent defaults to 2
+print(power(3, 3))    # 27  — exponent overridden to 3
+print(power(2, 10))   # 1024
+```
+
+```python
+def create_profile(name, role="Student", year=1):
+    print(f"Name: {name} | Role: {role} | Year: {year}")
+
+create_profile("Alice")
+# Name: Alice | Role: Student | Year: 1
+
+create_profile("Dr. Chan", role="Lecturer", year=10)
+# Name: Dr. Chan | Role: Lecturer | Year: 10
+```
+
+::: {.callout-important}
+Parameters with defaults must come **after** required parameters.
+:::
+
+## 2.5 — Keyword Arguments
+
+Call a function using parameter names — order does not matter:
+
+```python
+def describe_pet(name, animal, color):
+    print(f"{name} is a {color} {animal}.")
+
+# Positional (order matters):
+describe_pet("Rex", "dog", "brown")
+
+# Keyword (order does NOT matter):
+describe_pet(color="black", name="Mittens", animal="cat")
+```
+
+```python
+def order_food(item, size="medium", extra_sauce=False):
+    sauce = " + sauce" if extra_sauce else ""
+    print(f"Order: {size} {item}{sauce}")
+
+order_food("burger", extra_sauce=True)
+# Order: medium burger + sauce
+```
+
+---
+
+# Chapter 3: Return Values
+
+## 3.1 — The `return` Statement
+
+`return` immediately exits the function and sends a value back:
+
+```python
+def absolute_value(n):
+    if n >= 0:
+        return n      # exits here if n >= 0
+    return -n         # only reached if n < 0
+
+print(absolute_value(5))   # 5
+print(absolute_value(-3))  # 3
+```
+
+::: {.callout-note}
+Once `return` runs, no more code in that function executes.
+:::
+
+```python
+def check_age(age):
+    if age < 0:
+        return "Invalid age"
+    if age < 18:
+        return "Minor"
+    return "Adult"
+
+print(check_age(-1))   # Invalid age
+print(check_age(15))   # Minor
+print(check_age(25))   # Adult
+```
+
+## 3.2 — Returning Multiple Values
+
+Python functions can return **multiple values** as a tuple:
+
+```python
+def min_max(numbers):
+    return min(numbers), max(numbers)
+
+low, high = min_max([4, 1, 9, 2, 7])
+print(low)    # 1
+print(high)   # 9
+```
+
+```python
+def divide(a, b):
+    if b == 0:
+        return None, "Cannot divide by zero"
+    return a / b, None
+
+result, error = divide(10, 2)
+print(result)  # 5.0
+print(error)   # None
+
+result, error = divide(10, 0)
+print(result)  # None
+print(error)   # Cannot divide by zero
+```
+
+## 3.3 — Functions Without `return`
+
+If a function has no `return`, it implicitly returns `None`:
+
+```python
+def say_hi():
+    print("Hi!")
+
+value = say_hi()       # prints: Hi!
+print(value)           # None
+print(type(value))     # <class 'NoneType'>
+```
+
+::: {.callout-important}
+A common mistake is assigning the result of a void-like function:
+```python
+# WRONG — lst.sort() returns None, not the sorted list
+sorted_lst = [3,1,2].sort()
+print(sorted_lst)   # None  ← not what you wanted!
+
+# CORRECT
+lst = [3, 1, 2]
+lst.sort()
+print(lst)          # [1, 2, 3]
+```
+:::
+
+---
+
+# Chapter 4: Scope
+
+## 4.1 — Local vs Global Scope
+
+A variable created **inside** a function is **local** — it only exists there:
+
+```python
+def my_function():
+    x = 10       # local variable
+    print(x)
+
+my_function()    # 10
+# print(x)       # ← NameError! x does not exist outside
+```
+
+A variable created **outside** any function is **global** — visible everywhere:
+
+```python
+greeting = "Hello"   # global
+
+def show():
+    print(greeting)  # can READ the global
+
+show()               # Hello
+print(greeting)      # Hello
+```
+
+## 4.2 — Modifying Globals & the `global` Keyword
+
+By default, you cannot **modify** a global variable inside a function:
+
+```python
+count = 0
+
+def increment():
+    count = count + 1   # ← UnboundLocalError!
+
+increment()
+```
+
+Use the `global` keyword to allow modification:
+
+```python
+count = 0
+
+def increment():
+    global count
+    count = count + 1
+
+increment()
+increment()
+print(count)   # 2
+```
+
+::: {.callout-tip}
+Use `global` sparingly. Passing values as parameters and returning results is cleaner.
+:::
+
+## 4.3 — Scope Example
+
+```python
+total = 0             # global
+
+def add_to_total(n):
+    global total
+    total += n        # modifies global
+
+def reset():
+    global total
+    total = 0
+
+add_to_total(10)
+add_to_total(25)
+print(total)   # 35
+
+reset()
+print(total)   # 0
+```
+
+**Better approach — avoid globals:**
+```python
+def calculate_total(numbers):
+    total = 0           # local
+    for n in numbers:
+        total += n
+    return total        # return instead of modifying global
+
+print(calculate_total([10, 25]))  # 35
+```
+
+---
+
+# Chapter 5: Lambda Functions
+
+## 5.1 — What is a Lambda?
+
+A **lambda** is a small, anonymous (nameless) function written in one line:
+
+```python
+# Regular function:
+def square(x):
+    return x ** 2
+
+# Equivalent lambda:
+square = lambda x: x ** 2
+
+print(square(5))   # 25
+```
+
+**Syntax:** `lambda parameters: expression`
+
+```python
+add      = lambda a, b: a + b
+greet    = lambda name: f"Hello, {name}!"
+is_even  = lambda n: n % 2 == 0
+
+print(add(3, 4))         # 7
+print(greet("Alice"))    # Hello, Alice!
+print(is_even(6))        # True
+print(is_even(7))        # False
+```
+
+## 5.2 — Lambda with `sorted()`, `map()`, `filter()`
+
+Lambdas shine as short callbacks to other functions:
+
+**`sorted()` with a key:**
+```python
+students = [("Alice", 85), ("Bob", 92), ("Charlie", 78)]
+
+# Sort by score (second element):
+ranked = sorted(students, key=lambda s: s[1], reverse=True)
+print(ranked)
+# [('Bob', 92), ('Alice', 85), ('Charlie', 78)]
+```
+
+**`map()` — apply to every item:**
+```python
+prices = [100, 200, 300]
+discounted = list(map(lambda p: p * 0.9, prices))
+print(discounted)  # [90.0, 180.0, 270.0]
+```
+
+**`filter()` — keep items that match:**
+```python
+numbers = [1, 2, 3, 4, 5, 6, 7, 8]
+evens = list(filter(lambda n: n % 2 == 0, numbers))
+print(evens)  # [2, 4, 6, 8]
+```
+
+---
+
+# Chapter 6: Built-in Functions
+
+## 6.1 — Commonly Used Built-ins
+
+Python has many powerful functions ready to use:
+
+| Function | What it does | Example |
+|----------|-------------|---------|
+| `len(x)` | Length of x | `len([1,2,3])` → `3` |
+| `range(n)` | Range of integers | `range(5)` → `0..4` |
+| `type(x)` | Type of x | `type(3.14)` → `float` |
+| `int(x)` | Convert to int | `int("42")` → `42` |
+| `str(x)` | Convert to str | `str(100)` → `"100"` |
+| `abs(x)` | Absolute value | `abs(-7)` → `7` |
+| `round(x, n)` | Round to n decimals | `round(3.14159, 2)` → `3.14` |
+| `max(iterable)` | Largest value | `max([3,1,4])` → `4` |
+| `min(iterable)` | Smallest value | `min([3,1,4])` → `1` |
+| `sum(iterable)` | Sum of all values | `sum([1,2,3])` → `6` |
+
+## 6.2 — `zip()`, `enumerate()`, `sorted()`
+
+**`zip()` — pair items from two lists:**
+```python
+names  = ["Alice", "Bob", "Charlie"]
+scores = [85, 92, 78]
+
+for name, score in zip(names, scores):
+    print(f"{name}: {score}")
+# Alice: 85
+# Bob: 92
+# Charlie: 78
+```
+
+**`enumerate()` — loop with index:**
+```python
+fruits = ["apple", "banana", "cherry"]
+for i, fruit in enumerate(fruits, start=1):
+    print(f"{i}. {fruit}")
+# 1. apple
+# 2. banana
+# 3. cherry
+```
+
+**`sorted()` — returns new sorted list (does not modify original):**
+```python
+nums = [3, 1, 4, 1, 5]
+print(sorted(nums))           # [1, 1, 3, 4, 5]
+print(sorted(nums, reverse=True))  # [5, 4, 3, 1, 1]
+print(nums)                   # [3, 1, 4, 1, 5]  ← unchanged!
+```
+
+---
+
+## Review Summary
+
+| Topic | Key Points |
+|-------|-----------|
+| **What is a function** | Named reusable block; defined with `def`; called by name |
+| **Why functions** | DRY principle — avoid repetition, improve readability |
+| **Types** | No param/no return · With param/no return · With param/with return |
+| **Parameters** | Positional, keyword, default values |
+| **Return** | `return` sends value back; no `return` → `None` |
+| **Multiple return** | Returns a tuple: `return a, b` → unpack with `x, y = f()` |
+| **Scope** | Local (inside function) vs Global (outside); `global` keyword |
+| **Lambda** | `lambda x: expr` — short anonymous function for one-liners |
+| **Built-ins** | `len`, `range`, `sum`, `max`, `min`, `sorted`, `zip`, `enumerate` |
+
+::: {.callout-tip}
+## Ready to Practice?
+5 hands-on exercises ahead — write real Python functions!
+:::
+
+---
+
+# PART 2: Practice Exercises
+
+---
+
+# Exercise 1
+
+## Temperature Converter
+
+**Task:** Write two functions to convert temperatures:
+
+1. `celsius_to_fahrenheit(c)` — converts Celsius to Fahrenheit using the formula `F = C × 9/5 + 32`
+2. `fahrenheit_to_celsius(f)` — converts Fahrenheit to Celsius using the formula `C = (F − 32) × 5/9`
+
+Then call both functions and print the results formatted to **1 decimal place**.
+
+**Expected output:**
+```
+0°C  = 32.0°F
+100°C = 212.0°F
+32°F = 0.0°C
+98.6°F = 37.0°C
+```
+
+::: {.callout-note}
+## Hint
+Use an f-string with `:.1f` to format the output.
+:::
+
+## Exercise 1 — Sample Solution
+
+```python
+def celsius_to_fahrenheit(c):
+    return c * 9/5 + 32
+
+def fahrenheit_to_celsius(f):
+    return (f - 32) * 5/9
+
+print(f"0°C  = {celsius_to_fahrenheit(0):.1f}°F")
+print(f"100°C = {celsius_to_fahrenheit(100):.1f}°F")
+print(f"32°F = {fahrenheit_to_celsius(32):.1f}°C")
+print(f"98.6°F = {fahrenheit_to_celsius(98.6):.1f}°C")
+```
+
+**Skills practiced:** parameters, return values, f-string formatting
+
+---
+
+# Exercise 2
+
+## Student Grade Classifier
+
+**Task:** Write a function `get_grade(score)` that takes a numeric score (0–100) and returns the letter grade according to this scale:
+
+| Score | Grade |
+|-------|-------|
+| 90–100 | A |
+| 80–89 | B |
+| 70–79 | C |
+| 60–69 | D |
+| Below 60 | F |
+
+Then write a second function `print_report(name, score)` that prints the student's name, score, and grade — **no return value**.
+
+**Expected output:**
+```
+Alice    | 95  | Grade: A
+Bob      | 82  | Grade: B
+Charlie  | 67  | Grade: D
+Diana    | 45  | Grade: F
+```
+
+## Exercise 2 — Sample Solution
+
+```python
+def get_grade(score):
+    if score >= 90:
+        return "A"
+    elif score >= 80:
+        return "B"
+    elif score >= 70:
+        return "C"
+    elif score >= 60:
+        return "D"
+    else:
+        return "F"
+
+def print_report(name, score):
+    grade = get_grade(score)
+    print(f"{name:<8} | {score:<3} | Grade: {grade}")
+
+print_report("Alice",   95)
+print_report("Bob",     82)
+print_report("Charlie", 67)
+print_report("Diana",   45)
+```
+
+**Skills practiced:** return values, chaining functions, default-free parameters
+
+---
+
+# Exercise 3
+
+## List Statistics
+
+**Task:** Write a function `stats(numbers)` that takes a list of numbers and **returns three values**: the minimum, maximum, and average.
+
+Then use the function to display a report for two different lists.
+
+**Expected output:**
+```
+Scores: [85, 92, 78, 95, 60, 73]
+  Min: 60 | Max: 95 | Average: 80.50
+
+Prices: [9.99, 24.50, 5.00, 14.75]
+  Min: 5.0 | Max: 24.5 | Average: 13.56
+```
+
+::: {.callout-note}
+## Hint
+Return three values with `return min_val, max_val, avg`. Unpack with `low, high, avg = stats(...)`.
+Use `sum(numbers) / len(numbers)` to compute the average.
+:::
+
+## Exercise 3 — Sample Solution
+
+```python
+def stats(numbers):
+    min_val = min(numbers)
+    max_val = max(numbers)
+    avg     = sum(numbers) / len(numbers)
+    return min_val, max_val, avg
+
+scores = [85, 92, 78, 95, 60, 73]
+lo, hi, avg = stats(scores)
+print(f"Scores: {scores}")
+print(f"  Min: {lo} | Max: {hi} | Average: {avg:.2f}")
+
+prices = [9.99, 24.50, 5.00, 14.75]
+lo, hi, avg = stats(prices)
+print(f"\nPrices: {prices}")
+print(f"  Min: {lo} | Max: {hi} | Average: {avg:.2f}")
+```
+
+**Skills practiced:** returning multiple values, tuple unpacking, built-ins `min`/`max`/`sum`
+
+---
+
+# Exercise 4
+
+## Shopping Cart with Default Discount
+
+**Task:** Write a function `calculate_total(prices, discount=0)` where:
+
+- `prices` is a list of item prices
+- `discount` is a percentage (e.g. `10` means 10% off), default is `0`
+
+The function should return the **final total after discount**.
+
+Then call it in three ways:
+1. No discount
+2. With a 10% discount
+3. With a 20% discount using a keyword argument
+
+**Expected output:**
+```
+No discount:    $56.24
+10% off:        $50.62
+20% off:        $44.99
+```
+
+## Exercise 4 — Sample Solution
+
+```python
+def calculate_total(prices, discount=0):
+    subtotal = sum(prices)
+    return subtotal * (1 - discount / 100)
+
+cart = [9.99, 24.50, 5.00, 14.75, 2.00]
+
+print(f"No discount:    ${calculate_total(cart):.2f}")
+print(f"10% off:        ${calculate_total(cart, 10):.2f}")
+print(f"20% off:        ${calculate_total(cart, discount=20):.2f}")
+```
+
+**Skills practiced:** default parameters, keyword arguments, combining built-ins inside a function
+
+---
+
+# Exercise 5
+
+## Lambda & Built-ins — Score Processor
+
+**Task:** Given this list of student records:
+
+```python
+students = [
+    ("Alice",   88),
+    ("Bob",     55),
+    ("Charlie", 92),
+    ("Diana",   70),
+    ("Eve",     48),
+    ("Frank",   83),
+]
+```
+
+Using **lambda**, `filter()`, `map()`, and `sorted()`, complete these four tasks:
+
+1. **Filter** — keep only students who passed (score ≥ 60)
+2. **Sort** — sort the passing students by score, highest first
+3. **Map** — add 5 bonus points to every student's score (from the original list)
+4. **Top student** — use `max()` with a lambda key to find the student with the highest score
+
+Print the result of each step.
+
+## Exercise 5 — Sample Solution
+
+```python
+students = [
+    ("Alice",   88), ("Bob",     55), ("Charlie", 92),
+    ("Diana",   70), ("Eve",     48), ("Frank",   83),
+]
+
+# 1. Filter — passed students
+passed = list(filter(lambda s: s[1] >= 60, students))
+print("Passed:", passed)
+
+# 2. Sort by score descending
+ranked = sorted(passed, key=lambda s: s[1], reverse=True)
+print("Ranked:", ranked)
+
+# 3. Bonus +5 for everyone
+with_bonus = list(map(lambda s: (s[0], s[1] + 5), students))
+print("With bonus:", with_bonus)
+
+# 4. Top student
+top = max(students, key=lambda s: s[1])
+print(f"Top student: {top[0]} with {top[1]} points")
+```
+
+**Expected output:**
+```
+Passed: [('Alice', 88), ('Charlie', 92), ('Diana', 70), ('Frank', 83)]
+Ranked: [('Charlie', 92), ('Alice', 88), ('Frank', 83), ('Diana', 70)]
+With bonus: [('Alice', 93), ('Bob', 60), ('Charlie', 97), ('Diana', 75), ('Eve', 53), ('Frank', 88)]
+Top student: Charlie with 92 points
+```
+
+**Skills practiced:** lambda, `filter`, `map`, `sorted` with key, `max` with key
+
+---
+
+## Practice Complete!
+
+<div style="text-align:center; margin-top: 40px;">
+  <h2 style="color: #27ae60;">Great work, everyone!</h2>
+  <p style="font-size: 1.3em; margin-top: 20px;">You've applied functions in 5 real-world scenarios.</p>
+</div>
+
+::: {.callout-tip}
+## Next Class
+We move into **Modules, File Handling, and Error Handling** — building complete, real-world programs!
+:::
+
+::: {.callout-note}
+## Extra Challenge at Home
+Combine all 5 exercises into one program: a mini student management system that stores students in a list, computes stats, filters by grade, and prints a full report using only functions.
+:::

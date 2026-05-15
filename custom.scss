@@ -1,0 +1,137 @@
+/*-- scss:defaults --*/
+
+// Primary color variables
+$primary-blue: #2980b9;
+$primary-blue-dark: #1f618d;
+$primary-blue-light: #5dade2;
+
+// Typography
+$presentation-font-size: 32px;
+$presentation-heading-color: $primary-blue;
+$presentation-heading-font-weight: 600;
+
+/*-- scss:rules --*/
+
+// Base font size
+.reveal {
+  font-size: 32px;
+}
+
+// Headings
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4 {
+  color: #2980b9;
+  font-weight: 600;
+}
+
+// H2 with bottom border
+.reveal h2 {
+  font-size: 2em;
+  margin-bottom: 0.5em;
+  border-bottom: 3px solid #5dade2;
+  padding-bottom: 0.3em;
+}
+
+// Links
+.reveal a {
+  color: #2980b9;
+}
+
+.reveal a:hover {
+  color: #5dade2;
+}
+
+// Code styling
+.reveal code {
+  color: #1f618d;
+  background-color: rgba(41, 128, 185, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+// Code blocks
+.reveal pre {
+  font-size: 0.6em;
+  box-shadow: 0 2px 4px rgba(41, 128, 185, 0.2);
+  border-left: 4px solid #2980b9;
+}
+
+// Callouts
+.reveal .callout {
+  margin: 1em 0;
+  padding: 1em;
+  border-left: 4px solid;
+  background-color: #f8f9fa;
+}
+
+.reveal .callout-important {
+  border-color: #e74c3c;
+  background-color: rgba(231, 76, 60, 0.05);
+}
+
+.reveal .callout-tip {
+  border-color: #27ae60;
+  background-color: rgba(39, 174, 96, 0.05);
+}
+
+.reveal .callout-note {
+  border-color: #2980b9;
+  background-color: rgba(41, 128, 185, 0.05);
+}
+
+// Tables
+.reveal table {
+  font-size: 0.8em;
+}
+
+.reveal table th {
+  background-color: #2980b9;
+  color: #fff;
+  font-weight: 600;
+}
+
+.reveal table td {
+  border-bottom: 1px solid #ddd;
+}
+
+.reveal table tr:hover {
+  background-color: rgba(41, 128, 185, 0.05);
+}
+
+// Slide number
+.reveal .slide-number {
+  color: #2980b9;
+  background-color: rgba(41, 128, 185, 0.1);
+}
+
+// Progress bar
+.reveal .progress {
+  background: rgba(0, 0, 0, 0.2);
+  color: #2980b9;
+}
+
+// Selection color
+.reveal ::selection {
+  background: #5dade2;
+  color: #fff;
+}
+
+// Center text utility
+.center {
+  text-align: center;
+}
+
+// Emphasis styling
+.reveal em {
+  color: #1f618d;
+  font-style: italic;
+}
+
+.reveal strong {
+  color: #1f618d;
+  font-weight: 700;
+}
+
+
